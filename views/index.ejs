@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Human Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="normalize.css" type="text/css" />
+    <link rel="stylesheet" href="human.css" type="text/css" />
+    <style>
+    </style>
+</head>
+
+<body>
+    <h1>Human Assistant</h1>
+    <div id='info-bar'>
+        <div>
+            Round: <span id='round-number'></span>
+        </div>
+        <div>
+            Money: <span id='money'></span>
+        </div>
+        <div>
+            Warm-Up Time: <span id='warmup-time'></span>
+        </div>
+        <div>
+            Round Time: <span id='round-time'></span>
+        </div>
+        <!--<div>
+            Post-Round Time: <span id='postround-time'>0</span>
+        </div>-->
+    </div>
+    <div class='content'>
+        <div>
+            <h2>Can I Make...?</h2>
+            <h3>Cakes</h3>
+            <div>
+                Base Ingredients Per:
+                <ul style="margin: 3px">
+                    <li>egg: 2</li>
+                    <li>flour: 2</li>
+                    <li>milk: 1</li>
+                    <li>sugar: 1</li>
+                </ul>
+            </div>
+            <div>
+                <table>
+                    <tr>
+                        <td>Number</td>
+                        <td><input type="number" name="cakes" value="0" min="0" /></td>
+                    </tr>
+                    <tbody id='cake-additives'>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Pancakes</h3>
+            <div>
+                Base Ingredients Per:
+                <ul style="margin: 3px">
+                    <li>egg: 1</li>
+                    <li>flour: 2</li>
+                    <li>milk: 2</li>
+                </ul>
+            </div>
+            <div>
+                <table>
+                    <tr>
+                        <td>Number</td>
+                        <td><input type="number" name="pancakes" value="0" min="0" /></td>
+                    </tr>
+                    <tbody id='pancake-additives'>
+                    </tbody>
+                </table>
+            </div>
+            <button id="calculate-utility">Check</button>
+            <div style="margin-top: 3px; margin-bottom: 3px">
+                Potential Score: <span id='potential-score'>0</span>
+            </div>
+            <button id="save-allocation" style="display: none">Save</button>
+        </div>
+        <div>
+            <h2>Ingredients</h2>
+            <table id='ingredients'>
+                <thead>
+                    <tr>
+                        <th style="width: 90px">ingredient</th>
+                        <th style="width: 50px">required</th>
+                        <th style="width: 50px">have</th>
+                        <th style="width: 50px">need</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>egg</td>
+                    <td id='egg-required'>0</td>
+                    <td id='egg-have'>0</td>
+                    <td id='egg-need'>0</td>
+                </tr>
+                <tr>
+                    <td>flour</td>
+                    <td id='flour-required'>0</td>
+                    <td id='flour-have'>0</td>
+                    <td id='flour-need'>0</td>
+                </tr>
+                <tr>
+                    <td>milk</td>
+                    <td id='milk-required'>0</td>
+                    <td id='milk-have'>0</td>
+                    <td id='milk-need'>0</td>
+                </tr>
+                <tr>
+                    <td>sugar</td>
+                    <td id='sugar-required'>0</td>
+                    <td id='sugar-have'>0</td>
+                    <td id='sugar-need'>0</td>
+                </tr>
+                <tr>
+                    <td>chocolate</td>
+                    <td id='chocolate-required'>0</td>
+                    <td id='chocolate-have'>0</td>
+                    <td id='chocolate-need'>0</td>
+                </tr>
+                <tr>
+                    <td>vanilla</td>
+                    <td id='vanilla-required'>0</td>
+                    <td id='vanilla-have'>0</td>
+                    <td id='vanilla-need'>0</td>
+                </tr>
+                <tr>
+                    <td>blueberry</td>
+                    <td id='blueberry-required'>0</td>
+                    <td id='blueberry-have'>0</td>
+                    <td id='blueberry-need'>0</td>
+                </tr>
+            </table>
+            <h2>Offers</h2>
+            <table id='table-offers'>
+                <thead>
+                    <tr>
+                        <td colspan='2' style='border-right: 1px solid'><h4>Watson</h4></td>
+                        <td colspan='2'><h4>Celia</h4></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id='cost-row'>
+                        <td width='90px'>cost</td>
+                        <td id='offer-watson-cost' width='50px'>0</td>
+                        <td width='90px'>cost</td>
+                        <td id='offer-celia-cost' width='50px'>0</td>
+                    </tr>
+                    <tr>
+                        <td width='90px'>egg</td>
+                        <td id='offer-watson-egg' width='50px'>0</td>
+                        <td width='90px'>egg</td>
+                        <td id='offer-celia-egg' width='50px'>0</td>
+                    </tr>
+                    <tr>
+                        <td>flour</td>
+                        <td id='offer-watson-flour'>0</td>
+                        <td>flour</td>
+                        <td id='offer-celia-flour'>0</td>
+                    </tr>
+                    <tr>
+                        <td>milk</td>
+                        <td id='offer-watson-milk'>0</td>
+                        <td>milk</td>
+                        <td id='offer-celia-milk'>0</td>
+                    </tr>
+                    <tr>
+                        <td>sugar</td>
+                        <td id='offer-watson-sugar'>0</td>
+                        <td>sugar</td>
+                        <td id='offer-celia-sugar'>0</td>
+                    </tr>
+                    <tr>
+                        <td>chocolate</td>
+                        <td id='offer-watson-chocolate'>0</td>
+                        <td>chocolate</td>
+                        <td id='offer-celia-chocolate'>0</td>
+                    </tr>
+                    <tr>
+                        <td>vanilla</td>
+                        <td id='offer-watson-vanilla'>0</td>
+                        <td>vanilla</td>
+                        <td id='offer-celia-vanilla'>0</td>
+                    </tr>
+                    <tr>
+                        <td>blueberry</td>
+                        <td id='offer-watson-blueberry'>0</td>
+                        <td>blueberry</td>
+                        <td id='offer-celia-blueberry'>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h2>Utility</h2>
+            <table>
+                <tr>
+                    <td>Cake</td>
+                    <td id='utility-cake-value'></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <strong>Additives</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <table class='utility-supplements'>
+                            <tr>
+                                <td>Chocolate</td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>Quantity</td>
+                                            <td id='utility-cake-chocolate-quantity'></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Value</td>
+                                            <td id='utility-cake-chocolate-value'></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Vanilla</td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>Quantity</td>
+                                            <td id='utility-cake-vanilla-quantity'></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Value</td>
+                                            <td id='utility-cake-vanilla-value'></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <br /><br />
+            <table>
+                <tr>
+                    <td>Pancake</td>
+                    <td id='utility-pancake-value'></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <strong>Additives</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <table class='utility-supplements'>
+                            <tr>
+                                <td>Chocolate</td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>Quantity</td>
+                                            <td id='utility-pancake-chocolate-quantity'></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Value</td>
+                                            <td id='utility-pancake-chocolate-value'></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Blueberry</td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>Quantity</td>
+                                            <td id='utility-pancake-blueberry-quantity'></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Value</td>
+                                            <td id='utility-pancake-blueberry-value'></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script src="websocket.js"></script>
+    <script src="human.js"></script>
+</body>
+</html>

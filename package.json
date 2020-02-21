@@ -1,0 +1,23 @@
+{
+  "name": "human-ui",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://us-south.git.cloud.ibm.com/anac-humaine/anac-manager"
+  },
+  "author": "Matthew Peveler <pevelm@rpi.edu>",
+  "license": "MIT",
+  "dependencies": {
+    "@cisl/zepto-logger": "^1.0.0",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0",
+    "uuid": "^3.4.0",
+    "ws": "^7.2.1"
+  }
+}
