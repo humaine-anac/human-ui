@@ -4,7 +4,7 @@ const ingredients = ["egg", "flour", "milk", "sugar", "chocolate", "vanilla", "b
 let roundNumber = 0;
 let startingMoney = 30;
 const durations = {
-  warmup: 0,
+  warmUp: 0,
   round: 0,
   post: 0,
 }
@@ -94,7 +94,7 @@ function startRound() {
   document.getElementById('round-number').textContent = roundNumber;
   document.getElementById('money').textContent = startingMoney;
 
-  document.getElementById('warmup-time').textContent = durations.warmup;
+  document.getElementById('warmup-time').textContent = durations.warmUp;
   document.getElementById('round-time').textContent = durations.round;
   document.getElementById('post-time').textContent = durations.post;
 
@@ -113,7 +113,7 @@ function startRound() {
 function setRoundMetadata(data) {
   roundNumber = data.roundNumber;
   startingMoney = data.humanBudget.value;
-  durations.warmup = parseInt(data.durations.warmup);
+  durations.warmUp = parseInt(data.durations.warmUp);
   durations.round = parseInt(data.durations.round);
   durations.post = parseInt(data.durations.post);
 
