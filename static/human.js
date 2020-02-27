@@ -1,7 +1,15 @@
 const socket = new WebSocketClient();
 const ingredients = ["egg", "flour", "milk", "sugar", "chocolate", "vanilla", "blueberry"];
 
-const startingMoney = 30;
+let roundNumber = 0;
+let startingMoney = 30;
+const durations = {
+  warmup: 0,
+  round: 0,
+  post: 0,
+}
+
+let interval;
 
 function updateOffer(data) {
   const agent = data.agent;
@@ -44,21 +52,24 @@ function updateBid(data) {
 
 function startTimer(timer) {
   const elem = document.getElementById(timer);
-  const interval = setInterval(() => {
+  interval = setInterval(() => {
     const newTime = parseInt(elem.textContent) - 1;
     if (newTime >= 0) {
       elem.textContent = newTime;
     }
 
     if (newTime <= 0) {
+      clearInterval(interval);
       if (timer === 'warmup-time') {
         startTimer('round-time');
       }
-      else {
+      else if (timer === 'round-time') {
         document.getElementById('save-allocation').style.display = 'inline-block';
-        //startTimer('postround-time');
+        startTimer('post-time');
       }
-      clearInterval(interval);
+      else if (timer === 'post-time') {
+        //document.getElementById('save-allocation').style.display = 'none';
+      }
     }
   }, 1000);
 }
@@ -75,12 +86,17 @@ function setUtility(data) {
   }
 }
 
-function startRound(data) {
-  document.getElementById('round-number').textContent = data.roundNumber;
-  document.getElementById('warmup-time').textContent = 0;
-  document.getElementById('round-time').textContent = data.roundDuration;
-  //document.getElementById('postround-time').textContent = data.durations.postround;
+function startRound() {
+  if (interval) {
+    clearInterval(interval);
+  }
+
+  document.getElementById('round-number').textContent = roundNumber;
   document.getElementById('money').textContent = startingMoney;
+
+  document.getElementById('warmup-time').textContent = durations.warmup;
+  document.getElementById('round-time').textContent = durations.round;
+  document.getElementById('post-time').textContent = durations.post;
 
   const ingredients = ['egg', 'flour', 'milk', 'sugar', 'chocolate', 'vanilla', 'blueberry'];
   for (const ingredient of ingredients) {
@@ -91,7 +107,17 @@ function startRound(data) {
   }
 
   document.getElementById('save-allocation').style.display = 'none';
-  startTimer('round-time');
+  startTimer('warmup-time');
+}
+
+function setRoundMetadata(data) {
+  roundNumber = data.roundNumber;
+  startingMoney = data.humanBudget.value;
+  durations.warmup = parseInt(data.durations.warmup);
+  durations.round = parseInt(data.durations.round);
+  durations.post = parseInt(data.durations.post);
+
+  startRound();
 }
 
 function updateIngredientsNeeds(data) {
@@ -272,7 +298,7 @@ socket.onmessage = (msg) => {
       setUtility(msg.payload);
       break;
     case 'startRound':
-      startRound(msg.payload);
+      //startRound(msg.payload);
       break;
     case 'checkAllocationReturn':
       updateIngredientsNeeds(msg.payload.allocation);
@@ -282,7 +308,7 @@ socket.onmessage = (msg) => {
       if (msg.accepted) {
         //document.getElementById('score').textContent = msg.value;
       }
-      updateIngredientsNeeds(msg.payload);
+      //updateIngredientsNeeds(msg.payload);
       break;
     case 'updateBid':
       updateBid(msg.payload);
@@ -292,6 +318,9 @@ socket.onmessage = (msg) => {
       break;
     case 'acceptOffer':
       acceptOffer(msg.payload);
+      break;
+    case 'setRoundMetadata':
+      setRoundMetadata(msg.payload);
       break;
   }
 };

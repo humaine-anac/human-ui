@@ -85,20 +85,61 @@ app.post('/endRound', (req, res) => {
   res.json({'status': 'acknowledged'});
 });
 
+app.post('/sendRoundMetadata', (req, res) => {
+  logExpression('Inside /sendRoundMetadata', 2);
+  logExpression(req.body, 2);
+  for (let socket in sockets) {
+    sockets[socket].send(JSON.stringify({type: 'setRoundMetadata', payload: req.body}));
+  }
+  res.json({'status': 'acknowledged'});
+})
+
 function checkAllocation(data, socket) {
   let promises = [];
-  promises.push(postToService('anac-utility', '/checkAllocation', data.payload));
+  promises.push(postToService('anac-utility', '/checkAllocation', data));
   const payload = {
     currencyUnit: "USD",
     utility: humanUtilityFunction.utility,
     bundle: {
-      products: data.payload.allocation.products
+      products: data.allocation.products
     }
   };
   promises.push(postToService('anac-utility', '/calculateUtility/buyer', payload));
 
   Promise.all(promises).then((results) => {
     socket.send(JSON.stringify({type: 'checkAllocationReturn', payload: {allocation: results[0], utility: results[1]}}));
+  });
+}
+
+function saveAllocation(data, socket) {
+  postToService('anac-utility', '/checkAllocation', data).then((result) => {
+    if (result.sufficient) {
+      const payload = {
+        currencyUnit: "USD",
+        utility: humanUtilityFunction.utility,
+        bundle: {
+          products: data.allocation.products
+        }
+      };
+
+      console.log(JSON.stringify(payload, null, 2));
+
+      postToService('anac-utility', '/calculateUtility/human', payload).then((result) => {
+        socket.send(JSON.stringify({
+          type: 'saveAllocationResult',
+          accepted: true,
+          value: result.value,
+          data: result
+        }));
+      });
+
+      postToService('environment-orchestrator', '/receiveHumanAllocation', payload.bundle.products).then((result) => {
+        logExpression(result, 1);
+      });
+    }
+    else {
+      socket.send(JSON.stringify({type: 'saveAllocationResult', accepted: false, data: body}));
+    }
   });
 }
 
@@ -112,47 +153,10 @@ wsServer.on('connection', (socket) => {
     data = JSON.parse(data);
     switch (data.type) {
       case 'checkAllocation':
-        checkAllocation(data, socket);
+        checkAllocation(data.payload, socket);
         break;
       case 'saveAllocation':
-        postToService('anac-utility', '/checkAllocation', data.data).then((result) => {
-          if (body.sufficient) {
-            const payload = {
-              currencyUnit: "USD",
-              utility: humanUtilityFunction.utility,
-              bundle: {
-                products: data.data.allocation.products
-              }
-            };
-            postToService('anac-utility', '/calculateUtility/human', payload).then((result) => {
-              socket.send(JSON.stringify({
-                type: 'saveAllocationResult',
-                accepted: true,
-                value: result.value,
-                data: body
-              }));
-
-              for (let uuid in managerSockets) {
-                managerSockets[uuid].send(JSON.stringify({
-                  type: 'saveAllocationResult',
-                  data: {
-                    round: currentRound,
-                    value: result.value,
-                  }
-                }));
-              }
-
-              io.rabbit.publishTopic('manager.debug', {
-                type: 'saveHumanScore',
-                value: result.value,
-                payload: payload
-              });
-            });
-          }
-          else {
-            socket.send(JSON.stringify({type: 'saveAllocationResult', accepted: false, data: body}));
-          }
-        });
+        saveAllocation(data.payload, socket);
         break;
       case 'updateOffer':
         break;

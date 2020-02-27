@@ -15,24 +15,29 @@
     <h1>Human Assistant</h1>
     <div id='info-bar'>
         <div>
-            Round: <span id='round-number'></span>
+            Round: <span id='round-number'>0</span>
         </div>
         <div>
-            Money: <span id='money'></span>
+            Money: <span id='money'>0</span>
         </div>
         <div>
-            Warm-Up Time: <span id='warmup-time'></span>
+            Warm-Up Time: <span id='warmup-time'>0</span>
         </div>
         <div>
-            Round Time: <span id='round-time'></span>
+            Round Time: <span id='round-time'>0</span>
         </div>
-        <!--<div>
-            Post-Round Time: <span id='postround-time'>0</span>
-        </div>-->
+        <div>
+            Post-Round Time: <span id='post-time'>0</span>
+        </div>
     </div>
     <div class='content'>
         <div>
             <h2>Can I Make...?</h2>
+            <button id="calculate-utility">Check</button> <button id="save-allocation" style="display: none">Save</button>
+            <div style="margin-top: 3px; margin-bottom: 3px">
+                Potential Score: <span id='potential-score'>0</span>
+            </div>
+
             <h3>Cakes</h3>
             <div>
                 Base Ingredients Per:
@@ -72,11 +77,6 @@
                     </tbody>
                 </table>
             </div>
-            <button id="calculate-utility">Check</button>
-            <div style="margin-top: 3px; margin-bottom: 3px">
-                Potential Score: <span id='potential-score'>0</span>
-            </div>
-            <button id="save-allocation" style="display: none">Save</button>
         </div>
         <div>
             <h2>Ingredients</h2>
