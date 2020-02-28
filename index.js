@@ -96,7 +96,7 @@ app.post('/sendRoundMetadata', (req, res) => {
 
 function checkAllocation(data, socket) {
   let promises = [];
-  promises.push(postToService('anac-utility', '/checkAllocation', data));
+  promises.push(postToService('utility-generator', '/checkAllocation', data));
   const payload = {
     currencyUnit: "USD",
     utility: humanUtilityFunction.utility,
@@ -104,7 +104,7 @@ function checkAllocation(data, socket) {
       products: data.allocation.products
     }
   };
-  promises.push(postToService('anac-utility', '/calculateUtility/buyer', payload));
+  promises.push(postToService('utility-generator', '/calculateUtility/buyer', payload));
 
   Promise.all(promises).then((results) => {
     socket.send(JSON.stringify({type: 'checkAllocationReturn', payload: {allocation: results[0], utility: results[1]}}));
@@ -112,7 +112,7 @@ function checkAllocation(data, socket) {
 }
 
 function saveAllocation(data, socket) {
-  postToService('anac-utility', '/checkAllocation', data).then((result) => {
+  postToService('utility-generator', '/checkAllocation', data).then((result) => {
     if (result.sufficient) {
       const payload = {
         currencyUnit: "USD",
@@ -124,7 +124,7 @@ function saveAllocation(data, socket) {
 
       console.log(JSON.stringify(payload, null, 2));
 
-      postToService('anac-utility', '/calculateUtility/human', payload).then((result) => {
+      postToService('utility-generator', '/calculateUtility/human', payload).then((result) => {
         socket.send(JSON.stringify({
           type: 'saveAllocationResult',
           accepted: true,

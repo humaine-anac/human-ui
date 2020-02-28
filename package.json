@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://us-south.git.cloud.ibm.com/anac-humaine/anac-manager"
+    "url": "https://github.com/humaine-anac/human-ui"
   },
   "author": "Matthew Peveler <pevelm@rpi.edu>",
   "license": "MIT",
