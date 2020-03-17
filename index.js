@@ -94,7 +94,13 @@ app.post('/sendRoundMetadata', (req, res) => {
     sockets[socket].send(JSON.stringify({type: 'setRoundMetadata', payload: req.body}));
   }
   res.json({'status': 'acknowledged'});
-})
+});
+
+app.post('/receiveRoundTotals', (req, res) => {
+  logExpression('Inside /receiveRoundTotals', 2);
+  logExpression(req.body, 2);
+  res.json({'status': 'acknowledged'});
+});
 
 function checkAllocation(data, socket) {
   let promises = [];
