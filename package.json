@@ -13,7 +13,7 @@
   "author": "Matthew Peveler <pevelm@rpi.edu>",
   "license": "MIT",
   "dependencies": {
-    "@cisl/zepto-logger": "^1.0.0",
+    "@cisl/zepto-logger": "^1.1.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
