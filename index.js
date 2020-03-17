@@ -23,6 +23,8 @@ const app = express();
 app.set('port', myPort);
 app.set('view engine', 'ejs');
 app.set('json spaces', 2);
+// We need to expressly set this for when we package the human-ui
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'static')));
