@@ -4,20 +4,17 @@ const WebSocketServer = require('ws').Server;
 const {setLogLevel, logExpression} = require('@cisl/zepto-logger');
 const {createServer} = require('http');
 const uuidv4 = require('uuid/v4');
+const argv = require('minimist')(process.argv.slice(2));
 const {postToService} = require('./utils');
 
-let myPort = 7040;
 let logLevel = 1;
-process.argv.forEach((val, index, array) => {
-  if (val === '-port') {
-    myPort = parseInt(array[index + 1]);
-  }
-  if (val === '-level') {
-    logLevel = array[index + 1];
-    logExpression('Setting log level to ' + logLevel, 1);
-  }
-});
+if (argv.level) {
+  logLevel = parseInt(argv.level);
+  logExpression(`Setting log level to ${logLevel}`);
+}
 setLogLevel(logLevel);
+
+const myPort = parseInt(argv.port || 7040);
 
 const app = express();
 app.set('port', myPort);
