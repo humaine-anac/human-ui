@@ -1,5 +1,7 @@
 # human-ui
 
+__ARCHIVED__: See [competition-ui](https://github.com/humaine-anac/competition-ui) for the currently used repo for UI development.
+
 Human helper UI for the HuMaine competition. Allows human to see what
 the current offer is, what the current list of purchased ingredients is,
 etc.
